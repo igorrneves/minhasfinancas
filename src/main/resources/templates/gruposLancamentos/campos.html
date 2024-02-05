@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template.html}">
+<head>
+    <title>Minhas Finanças</title>
+</head>
+<body>
+    <div class="container text-center" layout:fragment="campos(habilitado)">
+        <div class="row">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           class="form-control"
+                           id="nome"
+                           name="nome" required="true"
+                           th:value="${banco?.nome}" th:disabled="${habilitado == false}"
+                           placeholder="Nome do Banco">
+                    <label th:for="nome">Nome</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           class="form-control"
+                           id="agencia"
+                           name="agencia" required="true"
+                           th:value="${banco?.agencia}" th:disabled="${habilitado == false}"
+                           placeholder="Agência Bancária">
+                    <label th:for="descricaoLancamento">Agência</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           class="form-control"
+                           id="conta"
+                           name="conta" required="true"
+                           th:value="${banco?.conta}" th:disabled="${habilitado == false}"
+                           placeholder="Conta Corrente">
+                    <label th:for="conta">Conta</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

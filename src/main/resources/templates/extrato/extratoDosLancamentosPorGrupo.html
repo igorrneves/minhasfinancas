@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template.html}">
+<head>
+  <title>Extrato</title>
+</head>
+<body>
+<div layout:fragment="formulario">
+  <div class="ms-0 p-3 mb-2 bg-primary-subtle text-emphasis-primary">
+    <form method="post" th:object="${extrato}" th:action="@{/extrato/carregarPaginaExtrato}">
+      <div class="row h6">
+        <div class="col">
+          <div class="form-floating mb-3">
+            <input type="number" min="1"
+                   class="form-control"
+                   th:field="*{mes}"
+                   placeholder="Mês">
+            <label th:for="mes">Mês</label>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-floating mb-3">
+            <input type="number" min="2023"
+                   class="form-control"
+                   th:field="*{ano}"
+                   placeholder="Ano">
+            <label th:for="mes">Ano</label>
+          </div>
+        </div>
+        <div class="col">
+          <button type="submit" class="btn btn-outline-primary" role="button"
+                  data-bs-toggle="tooltip" data-bs-placement="bottom"
+                  data-bs-title="Buscar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 class="bi bi-binoculars-fill" viewBox="0 0 16 16">
+              <path d="M4.5 1A1.5 1.5 0 0 0 3 2.5V3h4v-.5A1.5 1.5 0 0 0 5.5 1h-1zM7 4v1h2V4h4v.882a.5.5 0 0 0 .276.447l.895.447A1.5 1.5 0 0 1 15 7.118V13H9v-1.5a.5.5 0 0 1 .146-.354l.854-.853V9.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v.793l.854.853A.5.5 0 0 1 7 11.5V13H1V7.118a1.5 1.5 0 0 1 .83-1.342l.894-.447A.5.5 0 0 0 3 4.882V4h4zM1 14v.5A1.5 1.5 0 0 0 2.5 16h3A1.5 1.5 0 0 0 7 14.5V14H1zm8 0v.5a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5V14H9zm4-11H9v-.5A1.5 1.5 0 0 1 10.5 1h1A1.5 1.5 0 0 1 13 2.5V3z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="table-responsive small">
+
+    <table class="table caption-top table-striped table-hover table-sm">
+      <caption>
+        <h4>Lista de lançamentos - <span th:text="${planejamentoGrupo.grupoLancamento.nomeGrupo}"></span> - Total de Débitos: R$ <span th:text="${planejamentoGrupo.valorRealizado}"></span></h4>
+      </caption>
+      <thead >
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">DATA</th>
+        <th scope="col">DESCRIÇÃO</th>
+        <th scope="col">VALOR</th>
+        <th scope="col">BANCO</th>
+        <th scope="col">GRUPO LANÇAMENTO</th>
+        <th scope="col">AÇÕES</th>
+      </tr>
+      </thead>
+      <tbody class="table-group-divider">
+      <tr th:each="lancamento : ${planejamentoGrupo.lancamentosRealizados}" class="text-success">
+
+        <td th:if="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}" class="text-success"
+            data-bs-toggle="tooltip" data-bs-placement="bottom"
+            data-bs-title="Receita" ><i class="bi bi-emoji-grin"></i>
+        </td>
+        <td th:if="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).DESPESA}" class="text-danger"
+            data-bs-toggle="tooltip" data-bs-placement="bottom"
+            data-bs-title="Despesa" >
+          <i class="bi bi-emoji-frown"></i>
+        </td>
+        <td th:if="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).ESTORNO_CARTAO}" class="text-danger"
+            data-bs-toggle="tooltip" data-bs-placement="bottom"
+            data-bs-title="Despesa" >
+          <i class="bi bi-emoji-frown"></i>
+        </td>
+
+        <td th:text="${#temporals.format(lancamento.dataDoLancamento, 'dd/MM/yyyy')}" th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"></td>
+        <td th:text="${lancamento.descricaoLancamento}"
+            th:class="${lancamento.estadoDoLancamento}==${T(br.com.ireis.minhasfinancas.modelo.enumeracao.EstadoDoLancamento).VALIDADO}?'text-success' : 'text-danger'">
+        </td>
+        <td th:if="${lancamento.numeroDeParcelas > 1}" th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"> <p th:text="${#numbers.formatDecimal(lancamento.valorParcelaLancamento,1,2)}"></p></td>
+        <td th:if="${lancamento.numeroDeParcelas == 1}" th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"><p th:text="${#numbers.formatDecimal(lancamento.valorLancamento,1,2)}"></p></td>
+
+        <td th:text="${lancamento?.banco?.nome}" th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"></td>
+        <td th:text="${lancamento.grupoLancamento?.nomeGrupo}" th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"></td>
+        <td>
+          <form action="/lancamentos" method="post">
+            <input type="hidden" name="_method" value="delete">
+            <input type="hidden" name="id" th:value="${lancamento.id}">
+
+            <a th:href="@{/lancamentos/formulario?id={id}(id=${lancamento.id})}"
+               th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"
+               data-bs-toggle="tooltip"
+               data-bs-placement="bottom" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
+
+            <button type="submit"
+                    th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'btn text-success' : 'btn text-danger'"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom" data-bs-title="Excluir"><i class="bi bi-trash"></i>
+            </button>
+
+            <a th:href="@{/lancamentos/adicionarLancamentoNaFatura(id=${lancamento.id},idFaturaCartao=${idFaturaCartao})}" th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"
+               data-bs-toggle="tooltip" data-bs-placement="bottom"
+               data-bs-title="Incluir lançamento na fatura" th:if="${idFaturaCartao != null }">
+              <i class="bi bi-check-circle-fill"></i></a>
+
+            <a th:href="@{/lancamentos/removerLancamentoDaFatura(id=${lancamento.id},idFaturaCartao=${idFaturaCartao})}" th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"
+               data-bs-toggle="tooltip" data-bs-placement="bottom"
+               data-bs-title="Remover lançamento da fatura" th:if="${lancamento.faturaCartao != null }">
+              <i class="bi bi-dash-circle-fill"></i></a>
+
+            <span th:if="${lancamento.estadoDoLancamento}==${T(br.com.ireis.minhasfinancas.modelo.enumeracao.EstadoDoLancamento).ABERTO}">
+                                <a th:href="@{/lancamentos/atualizarEstadoDoLancamento(id=${lancamento.id},estado=${'VALIDADO'})}"
+                                   th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"
+                                   data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Validar lançamento"><i class="bi bi-clipboard-check"></i></a>
+                            </span>
+          </form>
+        </td>
+
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+</body>
+</html>

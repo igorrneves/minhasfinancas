@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template.html}">
+<head>
+  <title>Minhas Finanças</title>
+</head>
+<body>
+<div class="col-sm-9 p-3 "  layout:fragment="formulario">
+  <div class="table-responsive fs-6">
+    <small>
+      <table class="table caption-top table-striped table-hover table-bordered">
+      <thead class="table-dark">
+      <tr>
+        <th scope="col">DATA</th>
+        <th scope="col">DESCRIÇÃO</th>
+        <th scope="col">TIPO LANÇAMENTO</th>
+        <th scope="col">VALOR</th>
+        <th scope="col">NÚMERO DE PARCELAS</th>
+        <th scope="col">TIPO DE DESPESA</th>
+        <th scope="col">FORMA DE PAGAMENTO</th>
+        <th scope="col">GRUPO LANÇAMENTO</th>
+        <th scope="col">AÇÕES</th>
+      </tr>
+      </thead>
+      <tbody class="table-group-divider">
+      <tr th:each="lancamento : ${lista}">
+        <td th:text="${lancamento.dataDoLancamento}"></td>
+        <td th:text="${lancamento.descricaoLancamento}"></td>
+        <td th:text="${lancamento.tipoDeLancamento}"></td>
+        <td th:text="${lancamento.valorLancamento}"></td>
+        <td th:text="${lancamento.numeroDeParcelas}"></td>
+        <td th:text="${lancamento.tipoDeDespesa}"></td>
+        <td th:text="${lancamento.formaDePagamento}"></td>
+        <td th:text="${lancamento.grupoLancamento}"></td>
+        <td>
+          <a th:href="@{/lancamentos?id={id}(id=${lancamento.id})}">Editar</a>
+          <form action="/lancamentos/listagem" method="post">
+            <input type="hidden" name="_method" value="delete">
+            <input type="hidden" name="id" th:value="${lancamento.id}">
+            <input type="submit" value="Excluir">
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    </small>
+  </div>
+</div>
+
+</body>
+</html>

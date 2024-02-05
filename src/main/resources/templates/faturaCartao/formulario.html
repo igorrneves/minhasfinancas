@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template.html}">
+<head>
+    <title>Minhas Finanças</title>
+</head>
+<body>
+<div class="col-sm-9 p-3" layout:fragment="formulario">
+    <form method="post" th:object="${cartaoDeCredito}"
+          th:action="${cartaoDeCredito.id == null} ? @{/cartoesDeCredito/cadastrar} : @{/cartoesDeCredito/visualizacao}">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Cadastro de Cartões de Crédito</h5>
+            </div>
+            <div class="card-body">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button class="btn btn-primary" type="submit"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="Salvar"><i class="bi bi-floppy"></i></button>
+                    <a th:href="@{/cartoesDeCredito}" class="btn btn-primary" role="button"
+                       data-bs-toggle="tooltip" data-bs-placement="bottom"
+                       data-bs-title="Listagem"> <i class="bi bi-list-check"></i></a>
+                </div>
+                <p class="card-text">
+
+
+                <div layout:replace="~{/cartoesDeCredito/campos :: campos}"></div>
+                <div class="form-floating mb-3">
+                    <input type="hidden" name="_method" value="put" th:if="${cartaoDeCredito.id != null}">
+                    <input type="hidden" name="id" th:value="${cartaoDeCredito?.id}">
+
+                </div>
+
+                </p>
+            </div>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

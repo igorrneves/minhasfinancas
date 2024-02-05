@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template.html}">
+<head>
+  <title>Minhas Finanças</title>
+</head>
+<body>
+<div class="col-sm-9 p-3 "  layout:fragment="formulario">
+  <div class="table-responsive fs-6">
+    <a th:href="@{/bancos/formulario}">Novo</a>
+    <small>
+      <table class="table caption-top table-striped table-hover table-bordered">
+      <thead class="table-dark">
+      <tr>
+        <th scope="col">NOME</th>
+        <th scope="col">AGÊNCIA</th>
+        <th scope="col">CONTA</th>
+        <th scope="col">AÇÕES</th>
+      </tr>
+      </thead>
+      <tbody class="table-group-divider">
+      <tr th:each="banco : ${lista}">
+        <td th:text="${banco.nome}"></td>
+        <td th:text="${banco.agencia}"></td>
+        <td th:text="${banco.conta}"></td>
+
+        <td>
+          <a th:href="@{/bancos/formulario?id={id}(id=${banco.id})}">Editar</a>
+          <form action="/bancos" method="post">
+            <input type="hidden" name="_method" value="delete">
+            <input type="hidden" name="id" th:value="${banco.id}">
+            <input type="submit" value="Excluir">
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    </small>
+  </div>
+</div>
+
+</body>
+</html>

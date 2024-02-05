@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template.html}">
+<head>
+  <title>Minhas Finanças</title>
+</head>
+<body>
+<div class="col-sm-9 p-3 "  layout:fragment="formulario">
+  <div><p><a th:href="@{/cartoesDeCredito/formulario}" class="btn btn-primary btn-circle" role="button" >Novo</a></p></div>
+
+  <div class="table-responsive fs-6">
+    <small>
+      <table class="table caption-top table-striped table-hover table-bordered">
+      <thead class="table-dark">
+      <tr>
+        <th scope="col">BANCO</th>
+        <th scope="col">BANDEIRA</th>
+        <th scope="col">NÚMERO</th>
+        <th scope="col">MÊS DE VALIDADE</th>
+        <th scope="col">ANO DE VALIDADE</th>
+        <th scope="col">CÓDIGO DE SEGURANÇA</th>
+        <th scope="col">SITUAÇÃO</th>
+        <th scope="col">AÇÕES</th>
+      </tr>
+      </thead>
+      <tbody class="table-group-divider">
+      <tr th:each="cartaoDeCredito : ${lista}">
+        <td th:text="${cartaoDeCredito.banco.nome}"></td>
+        <td th:text="${cartaoDeCredito.bandeira}"></td>
+        <td th:text="${cartaoDeCredito.numero}"></td>
+        <td th:text="${cartaoDeCredito.mesValidade}"></td>
+        <td th:text="${cartaoDeCredito.anoValidade}"></td>
+        <td th:text="${cartaoDeCredito.codigoSeguranca}"></td>
+        <td th:text="${cartaoDeCredito.situacao}"></td>
+        <td>
+          <a th:href="@{/cartoesDeCredito?id={id}(id=${cartaoDeCredito.id})}">Editar</a>
+          <form action="/cartoesDeCredito/listagem" method="post">
+            <input type="hidden" name="_method" value="delete">
+            <input type="hidden" name="id" th:value="${cartaoDeCredito.id}">
+            <input type="submit" value="Excluir">
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    </small>
+  </div>
+</div>
+
+</body>
+</html>

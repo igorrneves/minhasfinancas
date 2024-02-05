@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template.html}">
+<head>
+    <title>Minhas Finanças</title>
+</head>
+<body>
+    <div class="container text-center" layout:fragment="campos(habilitado)">
+        <div class="row">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <input type="date"
+                           class="form-control"
+                           id="dataDoLancamento"
+                           name="dataDoLancamento"
+                           th:value="${lancamento?.dataDoLancamento}" th:disabled="${modoExibicao == 'leitura'}"
+                           placeholder="Data Do Lançamento"
+                           required="true">
+                    <label th:for="dataDoLancamento">Data Do Lançamento</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <select class="form-control"
+                            id="tipoDeLancamento"
+                            name="tipoDeLancamento"
+                            required="true" th:disabled="${modoExibicao == 'leitura'}">
+
+                        <option th:each="tipo : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).values()}"
+                                th:value="${tipo}" th:selected="${lancamento.tipoDeLancamento} == ${tipo}"
+                                th:text="${tipo}"></option>
+                    </select>
+                    <label th:for="tipoDeLancamento">Tipo De Lançamento</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <select class="form-control"
+                            id="tipoDeDespesa"
+                            name="tipoDeDespesa" th:disabled="${modoExibicao == 'leitura'}">
+                        <option th:each="tipo : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeDespesa).values()}"
+                                th:value="${tipo}"
+                                th:text="${tipo}"
+                                th:selected="${lancamento?.tipoDeDespesa.getDescricao() == tipo.getDescricao()}"></option>
+                    </select>
+                    <label th:for="tipoDeDespesa">Tipo De Despesa</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <select class="form-control"
+                            id="formaDeRecebimentoCredito"
+                            name="formaDeRecebimentoCredito">
+
+                        <option th:each="forma : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.FormaDeRecebimentoCredito).values()}"
+                                th:value="${forma}" th:selected="${lancamento.formaDeRecebimentoCredito} == ${forma}"
+                                th:text="${forma}"></option>
+                    </select>
+                    <label th:for="formaDeRecebimentoCredito">Forma de Recebimento do Crédito</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <select class="form-control"
+                            id="banco"
+                            name="banco" th:disabled="${modoExibicao == 'leitura'}">
+                        <option th:each="banco : ${listaBancos}"
+                                th:value="${banco.id}"
+                                th:text="${banco.nome}"
+                                th:selected="${lancamento.banco?.id == banco.id}"></option>
+                    </select>
+                    <label th:for="banco">Banco</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           class="form-control"
+                           id="descricaoLancamento"
+                           name="descricaoLancamento"
+                           th:value="${lancamento?.descricaoLancamento}" th:disabled="${modoExibicao == 'leitura'}"
+                           placeholder="Descricao Lancamento">
+                    <label th:for="descricaoLancamento">Descrição</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           class="form-control"
+                           id="valorLancamento"
+                           name="valorLancamento"
+                           th:value="${lancamento?.valorLancamento}" th:disabled="${modoExibicao == 'leitura'}"
+                           placeholder="Valor Lancamento">
+                    <label th:for="valorLancamento">Valor</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <input type="number" min="1"
+                           class="form-control"
+                           id="numeroDeParcelas"
+                           name="numeroDeParcelas"
+                           th:value="${lancamento?.numeroDeParcelas} ?:'1'" th:readonly="${lancamento.id != null}"
+                           placeholder="Número De Parcelas">
+                    <label th:for="numeroDeParcelas">Número De Parcelas</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <select class="form-control"
+                            id="formaDePagamento"
+                            name="formaDePagamento" th:disabled="${modoExibicao == 'leitura'}">
+                        <option th:each="forma : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.FormaDePagamento).values()}"
+                                th:value="${forma}"
+                                th:text="${forma}"
+                                th:selected="${lancamento.formaDePagamento} == ${forma}"></option>
+                    </select>
+                    <label th:for="formaDePagamento">Forma De Pagamento</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <input type="text"
+                           class="form-control"
+                           id="numeroCheque"
+                           name="numeroCheque"
+                           th:value="${lancamento?.numeroCheque}" th:disabled="${modoExibicao == 'leitura'}"
+                           placeholder="Número do Cheque">
+                    <label th:for="numeroCheque">Número do Cheque</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <select class="form-control"
+                            id="grupoLancamento"
+                            name="grupoLancamento" th:disabled="${modoExibicao == 'leitura'}">
+                        <option th:each="grupo : ${listaGruposLancamentos}"
+                                th:value="${grupo.id}"
+                                th:text="${grupo.nomeGrupo}"
+                                th:selected="${lancamento.grupoLancamento?.id == grupo.id}"></option>
+                    </select>
+                    <label th:for="grupoLancamento">Grupo de Lançamento</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <select class="form-control"
+                            id="cartaoDeCredito"
+                            name="cartaoDeCredito" th:disabled="${modoExibicao == 'leitura'}">
+                        <option th:each="cartaoDeCredito : ${listaCartoesDeCredito}"
+                                th:value="${cartaoDeCredito.id}"
+                                th:text="${cartaoDeCredito.numero}"
+                                th:selected="${lancamento.cartaoDeCredito?.id == cartaoDeCredito.id}"></option>
+                    </select>
+                    <label th:for="cartaoDeCredito">Cartão de Crédito</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <select class="form-control"
+                            id="estadoDoLancamento"
+                            name="estadoDoLancamento" th:disabled="${modoExibicao == 'leitura'}">
+                        <option th:each="estado : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.EstadoDoLancamento).values()}"
+                                th:value="${estado}"
+                                th:text="${estado}"
+                                th:selected="${lancamento.estadoDoLancamento} == ${estado}"></option>
+                    </select>
+                    <label th:for="estadoDoLancamento">Estado Do Lançamento</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mb-3">
+                    <input type="number" min="0"
+                           class="form-control"
+                           id="numeroDeRepeticaoDoLancamento"
+                           name="numeroDeRepeticaoDoLancamento"
+                           th:value="${lancamento?.numeroDeRepeticaoDoLancamento}"
+                           placeholder="Informe para quantos meses o lançamento deverá ser repetido">
+                    <label th:for="numeroDeRepeticaoDoLancamento">Repetir(meses)</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

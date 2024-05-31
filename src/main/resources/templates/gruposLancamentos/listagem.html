@@ -2,42 +2,74 @@
 <html lang="pt-br"
       xmlns:th="http://thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{template.html}">
+      layout:decorate="~{/template.html}" xmlns="http://www.w3.org/1999/html">
 <head>
   <title>Minhas Finanças</title>
 </head>
 <body>
-<div class="col-sm-9 p-3 "  layout:fragment="formulario">
-  <div class="table-responsive fs-6">
-    <a th:href="@{/bancos/formulario}">Novo</a>
+<div layout:fragment="formulario">
+  <div layout:replace="~{/gruposLancamentos/atalhos :: atalhos}"></div>
+
+  <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 100%; max-height: 550px;">
+
     <small>
-      <table class="table caption-top table-striped table-hover table-bordered">
-      <thead class="table-dark">
+      <table class="table caption-top table-striped table-hover table-sm">
+        <caption>
+          <h5>Lista de grupos</h5>
+        </caption>
+        <thead>
+      <thead>
       <tr>
-        <th scope="col">NOME</th>
-        <th scope="col">AGÊNCIA</th>
-        <th scope="col">CONTA</th>
+        <th scope="col">NOME DO GRUPO</th>
+        <th scope="col">TIPO DE LANÇAMENTO</th>
         <th scope="col">AÇÕES</th>
       </tr>
       </thead>
       <tbody class="table-group-divider">
-      <tr th:each="banco : ${lista}">
-        <td th:text="${banco.nome}"></td>
-        <td th:text="${banco.agencia}"></td>
-        <td th:text="${banco.conta}"></td>
-
+      <tr th:each="grupoLancamento : ${lista}">
+        <td th:text="${grupoLancamento.nomeGrupo}"></td>
+        <td>[[${grupoLancamento.tipoDeLancamento}]]</td>
         <td>
-          <a th:href="@{/bancos/formulario?id={id}(id=${banco.id})}">Editar</a>
-          <form action="/bancos" method="post">
-            <input type="hidden" name="_method" value="delete">
-            <input type="hidden" name="id" th:value="${banco.id}">
-            <input type="submit" value="Excluir">
+          <form action="/gruposLancamentos" method="post">
+            <a th:href="@{/gruposLancamentos/formulario?id={id}(id=${grupoLancamento.id})}" class="btn btn-outline-primary" role="button">
+              <i class="bi bi-pencil"></i></a>
+
+            <input type="hidden" name="_method" value="delete" >
+
+            <input type="hidden" name="id" th:value="${grupoLancamento.id}">
+            <button type="submit" class="btn btn-outline-danger">
+              <i class="bi bi-trash"></i>
+            </button>
           </form>
         </td>
       </tr>
       </tbody>
     </table>
     </small>
+
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a class="page-link" aria-label="Previous"
+             th:href="@{/gruposLancamentos(size=${lista.size}, page=1)}"
+               >
+              <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li th:if="${lista.totalPages > 0}" class="page-link"
+             th:each="pageNumber : ${pageNumbers}">
+          <a th:href="@{/gruposLancamentos(size=${lista.size}, page=${pageNumber})}"
+             th:text=${pageNumber}
+             th:class="${pageNumber==lista.number + 1} ? active"></a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </div>
 

@@ -1,10 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/template.html}">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Minhas Finanças</title>
 </head>
 <body>
-$END$
+<div layout:fragment="listagem">
+    <div>
+        <p>
+            <a th:href="@{/planejamento/formulario}" class="btn btn-outline-primary btn-circle" role="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+            </svg>
+            Novo</a>
+            <a th:href="@{/planejamento}" class="btn btn-outline-primary" role="button"
+               data-bs-toggle="tooltip" data-bs-placement="bottom"
+               data-bs-title="Listagem"> <i class="bi bi-list-check"></i> Listagem</a>
+        </p>
+
+    </div>
+
+    <div class="table-responsive fs-6">
+        <form action="#" th:object="${planejamento}"
+              method="post">
+        <small>
+            <table class="table caption-top table-striped table-hover table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">GRUPO</th>
+                    <th scope="col">PLANEJADO</th>
+                    <th scope="col">REALIZADO</th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                <tr th:each="planejamento,stat : *{gruposPlanejados}">
+                    <td>
+                        <input type="text"
+                               class="form-control" readonly
+                               th:field="*{gruposPlanejados[__${stat.index}__].grupoLancamento.nomeGrupo}">
+                    </td>
+                  <td>
+                    <input type="text"
+                           class="form-control" readonly
+                           th:field="*{gruposPlanejados[__${stat.index}__].valorPlanejado}">
+                  </td>
+                  <td>
+                    <input type="text"
+                           class="form-control" readonly
+                           th:field="*{gruposPlanejados[__${stat.index}__].valorRealizado}">
+                  </td>
+
+                </tr>
+                </tbody>
+            </table>
+        </small>
+    </div>
+</div>
+
 </body>
 </html>

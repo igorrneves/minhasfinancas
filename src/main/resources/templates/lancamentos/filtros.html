@@ -1,10 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="pt-br"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/template.html}">
 
+<body>
+<div layout:fragment="filtros">
+    <form method="post" th:action="@{/lancamentos}" th:object="${lancamento}">
+        <div class="container-fluid ms-0 p-1 text-center">
+            <div class="row align-items-center text-uppercase" >
+                <div class="col">
+                    <div class="form-floating ">
+                        <input class="form-control fs-6 fw-bold" th:field="*{dataDoLancamento}" type="text">
+                        <label th:for="dataDoLancamento">Data</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating ">
+                        <select class="form-control fs-6 fw-bold" th:field="*{tipoDeLancamento}">
+                            <option th:each="tipo : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).values()}"
+                                    th:selected="${lancamento.tipoDeLancamento} == ${tipo}" th:text="${tipo}"
+                                    th:value="${tipo}"></option>
+                        </select>
+                        <label th:for="tipoDeLancamento">Tipo De Lançamento</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating ">
+                        <select class="form-control fs-6 fw-bold" th:field="*{grupoLancamento}">
+                            <option value="">-- Selecione --</option>
+                            <option th:each="grupo : ${listaGruposLancamentos}"
+                                    th:selected="${lancamento.grupoLancamento?.id == grupo.id}"
+                                    th:text="${grupo.nomeGrupo}"
+                                    th:value="${grupo.id}"></option>
+                        </select>
+                        <label th:for="grupoLancamento">Grupo de Lançamento</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating ">
+                        <select class="form-control fs-6 fw-bold" th:field="*{banco}">
+                            <option value="">-- Selecione --</option>
+                            <option th:each="banco : ${listaBancos}"
+                                    th:selected="${lancamento.banco?.id == banco.id}"
+                                    th:text="${banco.nome}"
+                                    th:value="${banco.id}"></option>
+                        </select>
+                        <label th:for="banco">Banco</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating">
+                        <select class="form-control fs-6 fw-bold" th:field="*{cartaoDeCredito}">
+                            <option value="">-- Selecione --</option>
+                            <option th:each="cartaoDeCredito : ${listaCartoesDeCredito}"
+                                    th:selected="${lancamento.cartaoDeCredito?.id == cartaoDeCredito.id}"
+                                    th:text="|${cartaoDeCredito.bandeira} - ${cartaoDeCredito.numero}|"
+                                    th:value="${cartaoDeCredito.id}"></option>
+                        </select>
+                        <label th:for="cartaoDeCredito">Cartão de Crédito</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating fs-6">
+                        <select class="form-control fs-6 fw-bold" th:field="*{estadoDoLancamento}">
+                            <option th:each="estado : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.EstadoDoLancamento).values()}"
+                                    th:selected="${lancamento.estadoDoLancamento} == ${estado}"
+                                    th:text="${estado}"
+                                    th:value="${estado}"></option>
+                        </select>
+                        <label th:for="estadoDoLancamento">Estado Do Lançamento</label>
+                    </div>
+                </div>
+                <div class="col ">
+                    <button class="btn btn-primary btn-lg btn-rounded" data-bs-placement="bottom"
+                            data-bs-title="Buscar" data-bs-toggle="tooltip"
+                            type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <input name="_method" th:if="${lancamento.id != null}" type="hidden" value="put">
+        <input name="id" th:value="${lancamento?.id}" type="hidden">
+    </form>
+</div>
 </body>
 </html>

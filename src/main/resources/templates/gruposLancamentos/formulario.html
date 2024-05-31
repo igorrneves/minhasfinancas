@@ -2,22 +2,42 @@
 <html lang="pt-br"
       xmlns:th="http://thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{template.html}">
+      layout:decorate="~{/template.html}">
 <head>
     <title>Minhas Finanças</title>
 </head>
 <body>
 <div class="col-sm-9 p-3" layout:fragment="formulario">
-    <h2>Cadastro de Banco</h2>
     <form method="post" th:object="${banco}"
-          th:action="${banco.id == null} ? @{/bancos/cadastrar} : @{/bancos}">
-        <div layout:replace="~{/bancos/campos :: campos}"> </div>
-        <div class="form-floating mb-3">
-            <input type="hidden" name="_method" value="put" th:if="${banco.id != null}">
-            <input type="hidden" name="id" th:value="${banco?.id}">
-            <input class="btn btn-primary" type="submit" value="Salvar">
+          th:action="${grupoLancamento.id == null} ? @{/gruposLancamentos/cadastrar} : @{/gruposLancamentos}">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Cadastro dos Grupos para Lançamentos</h5>
+            </div>
+            <div class="card-body">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button class="btn btn-outline-primary" type="submit"
+                            data-bs-toggle="tooltip" data-bs-placement="bottom"
+                            data-bs-title="Salvar"><i class="bi bi-floppy"></i></button>
+                    <a th:href="@{/gruposLancamentos}" class="btn btn-outline-primary" role="button"
+                       data-bs-toggle="tooltip" data-bs-placement="bottom"
+                       data-bs-title="Listagem"> <i class="bi bi-list-check"></i></a>
+                </div>
+                <p class="card-text">
+
+
+                <div layout:replace="~{/gruposLancamentos/campos :: campos}"></div>
+                <div class="form-floating mb-3">
+                    <input type="hidden" name="_method" value="put" th:if="${grupoLancamento.id != null}">
+                    <input type="hidden" name="id" th:value="${grupoLancamento?.id}">
+
+                </div>
+
+                </p>
+            </div>
         </div>
     </form>
+
 </div>
 </body>
 </html>

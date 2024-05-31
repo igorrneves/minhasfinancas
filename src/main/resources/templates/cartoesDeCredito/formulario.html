@@ -2,40 +2,119 @@
 <html lang="pt-br"
       xmlns:th="http://thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{template.html}">
+      layout:decorate="~{/template.html}">
 <head>
-    <title>Minhas Finanças</title>
+    <title>Cartão de Crédito</title>
 </head>
 <body>
 <div class="col-sm-9 p-3" layout:fragment="formulario">
-    <form method="post" th:object="${lancamento}"
-          th:action="${lancamento.id == null} ? @{/lancamentos/cadastrar} : @{/lancamentos/visualizacao}">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">Cadastro de Lançamentos</h5>
+    <div layout:replace="~{/cartoesDeCredito/atalhos :: atalhos}"></div>
+    <form method="post" th:object="${cartaoDeCredito}"
+          th:action="${cartaoDeCredito.id == null} ? @{/cartoesDeCredito/cadastrar} : @{/cartoesDeCredito}">
+        <fieldset class="form-floating border p-4">
+            <legend class="w-auto px-3">Formulário - Cadastro de cartão de crédito</legend>
+
+            <div class="row">
+
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <select class="form-control"
+                                th:field="*{banco}">
+                            <option th:each="banco : ${listaBancos}"
+                                    th:value="${banco.id}"
+                                    th:text="${banco.nome}"
+                                    th:selected="${cartaoDeCredito.banco} == ${banco.id}"></option>
+                        </select>
+                        <label th:for="banco">Banco</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <select class="form-control"
+                                th:field="*{bandeira}">
+                            <option th:each="bandeira : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.BandeiraCartaoDeCredito).values()}"
+                                    th:value="${bandeira}"
+                                    th:text="${bandeira}"
+                                    th:selected="${cartaoDeCredito.bandeira} == ${bandeira}"></option>
+                        </select>
+                        <label th:for="bandeira">Bandeira</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <select class="form-control"
+                                th:field="*{situacao}">
+                            <option th:each="situacao : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.SituacaoCartaoDeCredito).values()}"
+                                    th:value="${situacao}"
+                                    th:text="${situacao}"
+                                    th:selected="${cartaoDeCredito.situacao} == ${situacao}"></option>
+                        </select>
+                        <label th:for="situacao">Situação do Cartão</label>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button class="btn btn-primary" type="submit"
+            <div class="row">
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{numero}"
+                               placeholder="Número do Cartão">
+                        <label th:for="numero">Número do Cartão</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <input type="number"
+                               class="form-control"
+                               th:field="*{diaVencimento}"
+                               placeholder="Dia de Vencimento do Cartão">
+                        <label th:for="diaVencimento">Dia de Vencimento da Fatura</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <input type="number" min="1" max="12"
+                               class="form-control"
+                               th:field="*{mesValidade}"
+                               placeholder="Mês de validade">
+                        <label th:for="mesValidade">Mês de Validade</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <input type="number" min="2010" max="2030"
+                               class="form-control"
+                               th:field="*{anoValidade}"
+                               placeholder="Ano de validade">
+                        <label th:for="anoValidade">Ano de Validade</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{codigoSeguranca}"
+                               placeholder="Código de Segurança">
+                        <label th:for="codigoSeguranca">Código de Segurança</label>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" name="_method" value="put" th:if="${cartaoDeCredito.id != null}">
+            <input type="hidden" name="id" th:value="${cartaoDeCredito?.id}">
+            <div class="d-flex flex-row-reverse">
+                <div class="p-2">
+                    <button class="btn btn-outline-primary" type="submit"
                             data-bs-toggle="tooltip" data-bs-placement="bottom"
-                            data-bs-title="Salvar"><i class="bi bi-floppy"></i></button>
-                    <a th:href="@{/lancamentos}" class="btn btn-primary" role="button"
-                       data-bs-toggle="tooltip" data-bs-placement="bottom"
-                       data-bs-title="Listagem"> <i class="bi bi-list-check"></i></a>
+                            data-bs-title="Salvar"><i class="bi bi-floppy"></i>
+                    </button>
                 </div>
-                <p class="card-text">
-
-
-                <div layout:replace="~{/lancamentos/campos :: campos}"></div>
-                <div class="form-floating mb-3">
-                    <input type="hidden" name="_method" value="put" th:if="${lancamento.id != null}">
-                    <input type="hidden" name="id" th:value="${lancamento?.id}">
-
-                </div>
-
-                </p>
             </div>
-        </div>
+
+        </fieldset>
 
     </form>
 </div>

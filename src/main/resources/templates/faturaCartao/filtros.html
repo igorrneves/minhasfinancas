@@ -1,10 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
+<html lang="pt-br"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/template.html}">
+
 <body>
-$END$
+<div layout:fragment="filtros">
+    <form method="post" th:object="${faturaCartao}" th:action="@{/faturaCartao}">
+        <div class="container-fluid ms-0 p-1 text-center">
+            <div class="row align-items-center text-uppercase">
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <input type="number" min="1"
+                               class="form-control"
+                               th:field="*{mes}"
+                               placeholder="Mês correspondente a fatura">
+                        <label th:for="mes">Mês</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <input type="number" min="2023"
+                               class="form-control"
+                               th:field="*{ano}"
+                               placeholder="Ano correspondente a fatura">
+                        <label th:for="mes">Ano</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <select class="form-control"
+                                th:field="*{estado}">
+                            <option th:each="estado : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.EstadoDaFaturaCartaoDeCredito).values()}"
+                                    th:value="${estado}"
+                                    th:text="${estado}" th:selected="${faturaCartao.estado} == ${estado}"></option>
+                        </select>
+                        <label th:for="estado">Situação da fatura</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary btn-lg btn-rounded" data-bs-placement="bottom"
+                            data-bs-title="Buscar" data-bs-toggle="tooltip"
+                            type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 </body>
 </html>

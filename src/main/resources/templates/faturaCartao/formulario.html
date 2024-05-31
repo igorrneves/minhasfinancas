@@ -2,42 +2,64 @@
 <html lang="pt-br"
       xmlns:th="http://thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{template.html}">
+      layout:decorate="~{/template.html}" xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>Minhas Finanças</title>
+    <title>Fatura Cartão de Crédito</title>
 </head>
 <body>
-<div class="col-sm-9 p-3" layout:fragment="formulario">
-    <form method="post" th:object="${cartaoDeCredito}"
-          th:action="${cartaoDeCredito.id == null} ? @{/cartoesDeCredito/cadastrar} : @{/cartoesDeCredito/visualizacao}">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">Cadastro de Cartões de Crédito</h5>
-            </div>
-            <div class="card-body">
-                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button class="btn btn-primary" type="submit"
-                            data-bs-toggle="tooltip" data-bs-placement="bottom"
-                            data-bs-title="Salvar"><i class="bi bi-floppy"></i></button>
-                    <a th:href="@{/cartoesDeCredito}" class="btn btn-primary" role="button"
-                       data-bs-toggle="tooltip" data-bs-placement="bottom"
-                       data-bs-title="Listagem"> <i class="bi bi-list-check"></i></a>
+<div layout:fragment="formulario">
+    <div layout:replace="~{/faturaCartao/atalhos :: atalhos}"></div>
+    <form method="post" th:object="${faturaCartao}"
+          th:action="${faturaCartao.id == null} ? @{/faturaCartao/cadastrar} : @{/faturaCartao}">
+        <input type="hidden" name="_method" value="put" th:if="${faturaCartao.id != null}">
+        <input type="hidden" name="id" th:value="${faturaCartao?.id}">
+
+        <fieldset class="form-floating border p-4">
+            <legend class="w-auto px-3 text-uppercase">Formulário - Cadastro de Fatura</legend>
+            <p>
+                Cartão de Crédito: <span th:text="|*{cartaoDeCredito.banco.nome} - *{cartaoDeCredito.bandeira} - *{cartaoDeCredito.numero}|"></span>
+            </p>
+            <p>
+                Vencimento: <span th:text="|*{cartaoDeCredito.diaVencimento}/*{mes}/*{ano}|"></span>
+            </p>
+            <p>
+                Valor Total da Fatura: <span th:text="*{valorTotalFatura}"></span>
+            </p>
+
+
+            <div class="d-flex flex-row-reverse">
+                <div class="p-2">
+                    <button class="btn btn-primary btn-lg "
+                            type="submit"
+                            data-mdb-tooltip-init title="Salvar Fatura" data-mdb-placement="bottom" >
+                        <i class="bi bi-floppy"></i>
+                    </button>
+                    <a data-mdb-ripple-init
+                       th:class="${faturaCartao.id == null}? 'btn btn-primary btn-lg disabled' : 'btn btn-primary btn-lg'"
+                       role="button" data-mdb-tooltip-init title="Recalcular Fatura" data-mdb-placement="bottom"
+                       th:href="@{/faturaCartao/atualizarValorTotalDaFatura(id=${faturaCartao.id})}">
+                        <i class="bi bi-calculator-fill"></i>
+                    </a>
+                    <a data-mdb-ripple-init
+                       th:class="${faturaCartao.id == null}? 'btn btn-primary btn-lg disabled' : 'btn btn-primary btn-lg'"
+                       role="button" data-mdb-tooltip-init title="Fechar Fatura" data-mdb-placement="bottom"
+                       th:href="@{/faturaCartao/fecharFatura(id=${faturaCartao.id})}">
+                        <i class="bi bi-file-earmark-lock-fill"></i>
+                    </a>
+                    <a data-mdb-ripple-init
+                       th:class="${faturaCartao.id == null}? 'btn btn-primary btn-lg disabled' : 'btn btn-primary btn-lg'"
+                       role="button" data-mdb-tooltip-init title="Pagar Fatura" data-mdb-placement="bottom"
+                       th:href="@{/lancamentos/formPagamentoFaturaCartao(id=${faturaCartao.id})}">
+                        <i class="bi bi-wallet2"></i>
+                    </a>
                 </div>
-                <p class="card-text">
-
-
-                <div layout:replace="~{/cartoesDeCredito/campos :: campos}"></div>
-                <div class="form-floating mb-3">
-                    <input type="hidden" name="_method" value="put" th:if="${cartaoDeCredito.id != null}">
-                    <input type="hidden" name="id" th:value="${cartaoDeCredito?.id}">
-
-                </div>
-
-                </p>
             </div>
-        </div>
 
+        </fieldset>
     </form>
+    <br>
+    <div layout:replace="~{/lancamentos/listagem :: listagem}"></div>
+
 </div>
 </body>
 </html>

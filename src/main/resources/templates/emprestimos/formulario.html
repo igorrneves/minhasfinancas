@@ -2,62 +2,34 @@
 <html lang="pt-br"
       xmlns:th="http://thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{template.html}">
+      layout:decorate="~{/template.html}">
 <head>
-    <title>Lançamento</title>
+    <title>Emprestimo</title>
 </head>
 <body>
 <div layout:fragment="formulario">
-    <div layout:replace="~{/lancamentos/atalhos :: atalhos}"></div>
+    <div layout:replace="~{/emprestimos/atalhos :: atalhos}"></div>
 
-    <form method="post" th:object="${lancamento}" th:action="${lancamento.id == null} ? @{/lancamentos/cadastrar} : @{/lancamentos}">
+    <form method="post" th:object="${emprestimo}"
+          th:action="${emprestimo.id == null} ? @{/emprestimos/cadastrar} : @{/emprestimos}">
         <fieldset class="form-floating border p-4">
-            <legend class="w-auto px-3">Cadastro de lançamento</legend>
+            <legend class="w-auto px-3">Cadastro de empréstimo</legend>
 
             <div class="row">
                 <div class="col">
                     <div class="form-floating mb-3">
-                        <input type="text"
+                        <input type="date"
                                class="form-control"
-                               th:field="*{dataDoLancamento}"
-                               th:value="${lancamento.dataDoLancamento}">
-                        <label th:for="dataDoLancamento">Data Do Lançamento</label>
+                               th:field="*{dataAbertura}">
+                        <label th:for="dataAbertura">Data de abertura</label>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-floating mb-3">
-                        <select class="form-control"
-                                th:field="*{tipoDeLancamento}"
-                                required="true">
-                            <option th:each="tipo : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).values()}"
-                                    th:value="${tipo}" th:selected="${lancamento.tipoDeLancamento} == ${tipo}"
-                                    th:text="${tipo}"></option>
-                        </select>
-                        <label th:for="tipoDeLancamento">Tipo De Lançamento</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <select class="form-control"
-                                th:field="*{tipoDeDespesa}">
-                            <option
-                                    th:each="tipo : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeDespesa).values()}"
-                                    th:value="${tipo}"
-                                    th:text="${tipo}">
-                            </option>
-                        </select>
-                        <label th:for="tipoDeDespesa">Tipo De Despesa</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <select class="form-control"
-                                th:field="*{formaDeRecebimentoCredito}">
-                            <option th:each="forma : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.FormaDeRecebimentoCredito).values()}"
-                                    th:value="${forma}" th:selected="${lancamento.formaDeRecebimentoCredito} == ${forma}"
-                                    th:text="${forma}"></option>
-                        </select>
-                        <label th:for="formaDeRecebimentoCredito">Forma de Recebimento do Crédito</label>
+                        <input type="date"
+                               class="form-control"
+                               th:field="*{dataPrimeiraParcela}">
+                        <label th:for="dataPrimeiraParcela">Data da primeira parcela</label>
                     </div>
                 </div>
                 <div class="col">
@@ -67,119 +39,75 @@
                             <option th:each="banco : ${listaBancos}"
                                     th:value="${banco.id}"
                                     th:text="${banco.nome}"
-                                    th:selected="${lancamento.banco?.id == banco.id}"></option>
+                                    th:selected="${emprestimo.banco?.id == banco.id}"></option>
                         </select>
                         <label th:for="banco">Banco</label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col">
                     <div class="form-floating mb-3">
                         <input type="text"
                                class="form-control"
-                               th:field="*{descricaoLancamento}"
-                               th:value="*{descricaoLancamento}"
-                               placeholder="Descricao Lancamento">
-                        <label th:for="descricaoLancamento">Descrição</label>
+                               th:field="*{contrato}"
+                               placeholder="Contrato">
+                        <label th:for="contrato">Contrato</label>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <div class="form-floating mb-3">
-                        <input type="text"
+                        <input type="number"
                                class="form-control"
-                               th:field="*{valorLancamento}"
-                               th:value="*{valorLancamento}"
-                               placeholder="Valor Lancamento">
-                        <label th:for="valorLancamento">Valor</label>
+                               th:field="*{quantidadeParcelas}"
+                               placeholder="Quantidade de Parcelas">
+                        <label th:for="quantidadeParcelas">Quantidade de Parcelas</label>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-floating mb-3">
                         <input type="number" min="1"
                                class="form-control"
-                               th:field="*{numeroDeParcelas}"
-                               th:value="*{numeroDeParcelas}"
-                               placeholder="Número De Parcelas">
-                        <label th:for="numeroDeParcelas">Número De Parcelas</label>
+                               th:field="*{diaVencimento}"
+                               placeholder="Dia do vencimento">
+                        <label th:for="diaVencimento">Dia do vencimento</label>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <select class="form-control"
-                                th:field="*{formaDePagamento}">
-                            <option th:each="forma : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.FormaDePagamento).values()}"
-                                    th:value="${forma}"
-                                    th:text="${forma}"
-                                    th:selected="${lancamento.formaDePagamento} == ${forma}"></option>
-                        </select>
-                        <label th:for="formaDePagamento">Forma De Pagamento</label>
-                    </div>
-                </div>
+
                 <div class="col">
                     <div class="form-floating mb-3">
                         <input type="text"
                                class="form-control"
-                               th:field="*{numeroCheque}"
-                               th:value="*{numeroCheque}"
-                               placeholder="Número do Cheque">
-                        <label th:for="numeroCheque">Número do Cheque</label>
+                               th:field="*{valorEmprestimo}"
+                               placeholder="Valor do empréstimo">
+                        <label th:for="valorEmprestimo">Valor do empréstimo</label>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <div class="form-floating mb-3">
-                        <select class="form-control"
-                                th:field="*{grupoLancamento}">
-                            <option th:each="grupo : ${listaGruposLancamentos}"
-                                    th:value="${grupo.id}"
-                                    th:text="${grupo.nomeGrupo}"
-                                    th:selected="${lancamento.grupoLancamento?.id == grupo.id}"></option>
-                        </select>
-                        <label th:for="grupoLancamento">Grupo de Lançamento</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <select class="form-control"
-                                th:field="*{cartaoDeCredito}">
-                            <option th:each="cartaoDeCredito : ${listaCartoesDeCredito}"
-                                    th:value="${cartaoDeCredito.id}"
-                                    th:text="${cartaoDeCredito.numero}"
-                                    th:selected="${lancamento.cartaoDeCredito?.id == cartaoDeCredito.id}"></option>
-                        </select>
-                        <label th:for="cartaoDeCredito">Cartão de Crédito</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <select class="form-control"
-                                th:field="*{estadoDoLancamento}">
-                            <option th:each="estado : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.EstadoDoLancamento).values()}"
-                                    th:value="${estado}"
-                                    th:text="${estado}"
-                                    th:selected="${lancamento.estadoDoLancamento} == ${estado}"></option>
-                        </select>
-                        <label th:for="estadoDoLancamento">Estado Do Lançamento</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <input type="number" min="0"
+                        <input type="text" min="0"
                                class="form-control"
-                               th:field="*{numeroDeRepeticaoDoLancamento}"
-                               th:value="*{numeroDeRepeticaoDoLancamento}"
-                               placeholder="Informe para quantos meses o lançamento deverá ser repetido">
-                        <label th:for="numeroDeRepeticaoDoLancamento">Repetir(meses)</label>
+                               th:field="*{taxaJuros}"
+                               placeholder="Taxa de juros">
+                        <label th:for="taxaJuros">Taxa de juros</label>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-floating mb-3">
+                        <input type="text" min="0"
+                               class="form-control"
+                               th:field="*{valorEmprestimoParcela}"
+                               placeholder="Valor da parcela">
+                        <label th:for="valorEmprestimoParcela">Valor da parcela</label>
                     </div>
                 </div>
             </div>
 
-            <input type="hidden" name="_method" value="put" th:if="${lancamento.id != null}">
-            <input type="hidden" name="id" th:value="${lancamento?.id}">
+            <input type="hidden" name="_method" value="put" th:if="${emprestimo.id != null}">
+            <input type="hidden" name="id" th:value="${emprestimo?.id}">
 
             <button class="btn btn-outline-primary" type="submit"
                     data-bs-toggle="tooltip" data-bs-placement="bottom"

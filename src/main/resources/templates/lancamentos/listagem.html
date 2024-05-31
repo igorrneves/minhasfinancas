@@ -1,10 +1,151 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br"
+      layout:decorate="~{/template.html}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>lançamentos</title>
+
 </head>
 <body>
+<div layout:fragment="listagem">
+    <span th:if="${#strings.contains(#execInfo.processedTemplateName,'lancamentos')}">
+        <div layout:replace="~{/lancamentos/atalhos :: atalhos}"></div>
+        <div layout:replace="~{/lancamentos/filtros  :: filtros}"></div>
+   </span>
+    <div class="col-lg-12 mx-auto bg-white  rounded">
+        <div class="table-responsive ms-3 me-3 mb-3" style="position: relative; height: 650px">
+            <table class="table table-striped  fs-6">
+                <thead style="top: 0;  position: sticky;" class="table-light">
+                <tr>
+                    <th scope="col">DATA</th>
+                    <th scope="col">DESCRIÇÃO</th>
+                    <th scope="col">VALOR</th>
+                    <th scope="col" class="col-2">BANCO</th>
+                    <th scope="col">CARTÃO</th>
+                    <th scope="col" class="col-2">AÇÕES</th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider table-divider-color">
+                <tr class="text-success" th:each="lancamento : ${listaLancamentos}">
 
+                    <td><p class="fw-bold mb-1"
+                           th:text="${#temporals.format(lancamento.dataDoLancamento, 'dd/MM/yyyy')}"></p></td>
+                    <td>
+                        <p class="fw-normal mb-1" th:text="${lancamento.descricaoLancamento}"></p>
+                        <span class="text-muted mb-0">
+                            <a data-bs-placement="bottom"
+                               th:href="@{/lancamentos/listaParcelasDeUmLancamento(id=${lancamento.id})}"
+                               th:if="${(lancamento.numeroDeParcelas > 1)}">
+                                <span th:text="|Parcela: ${lancamento.numeroDaParcela}/${lancamento.numeroDeParcelas}|"></span>
+                            </a>
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="text-success"
+                              th:if="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}">
+                            <i class="fas fa-caret-up me-1"></i>
+                                <span class="text-success"
+                                      th:text="${#numbers.formatCurrency(lancamento.valorLancamento)}"></span>
+                        </span>
+                        <span class="text-success"
+                              th:if="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).INVESTIMENTO}">
+                            <i class="fas fa-caret-up me-1"></i>
+                                <span class="text-success"
+                                      th:text="${#numbers.formatCurrency(lancamento.valorLancamento)}"></span>
+                        </span>
+                        <span class="text-danger"
+                              th:if="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).DESPESA}">
+                            <span th:if="${lancamento.numeroDeParcelas > 1}">
+                                <i class="fas fa-caret-down me-1"></i>
+                                <span th:text="${#numbers.formatCurrency(lancamento.valorParcelaLancamento)}"></span>
+                            </span>
+                            <span th:if="${lancamento.numeroDeParcelas == 1}">
+                                <i class="fas fa-caret-down me-1"></i>
+                                <span th:text="${#numbers.formatCurrency(lancamento.valorLancamento)}"></span>
+                            </span>
+                        </span>
+                        <span class="text-danger"
+                              th:if="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).PAGAMENTO_FATURA_CARTAO}">
+                                <i class="fas fa-caret-down me-1"></i>
+                                <span th:text="${#numbers.formatCurrency(lancamento.valorLancamento)}"></span>
+                        </span>
+                    </td>
+
+
+                    <td><span th:text="${lancamento?.banco?.nome}"></span></td>
+
+                    <td>
+                    <span th:if="${lancamento.cartaoDeCredito != null}">
+                        <p class="fw-normal mb-1"
+                           th:text="|${lancamento.cartaoDeCredito?.bandeira} - ${lancamento.cartaoDeCredito?.numero}|"></p>
+                        <div>
+                            <span class="text-muted mb-0">
+                                <a data-bs-placement="bottom"
+                                   th:href="@{/faturaCartao/formulario(id=${lancamento.faturaCartao.id})}"
+                                   th:if="${lancamento.faturaCartao != null }">
+                                    <span th:text="|${lancamento.faturaCartao?.mes}/${lancamento.faturaCartao?.ano}|"></span>
+                                </a>
+                            </span>
+                            <a data-bs-placement="bottom"
+                               data-bs-title="Remover lançamento da fatura"
+                               data-bs-toggle="tooltip"
+                               th:href="@{/lancamentos/removerLancamentoDaFatura(id=${lancamento.id},idFaturaCartao=${idFaturaCartao})}"
+                               th:if="${lancamento.faturaCartao != null }"><i class="bi bi-x"></i>
+                            </a>
+                        </div>
+                    </span>
+                    </td>
+
+                    <td>
+                        <form action="/lancamentos" method="post">
+                            <input name="_method" type="hidden" value="delete">
+                            <input name="id" th:value="${lancamento.id}" type="hidden">
+
+                            <a data-bs-placement="bottom"
+                               data-bs-title="Editar"
+                               class="btn btn-link btn-lg px-3"
+                               data-bs-toggle="tooltip" data-mdb-ripple-init data-ripple-color="primary"
+                               th:href="@{/lancamentos/formulario?id={id}(id=${lancamento.id})}">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+
+                            <button
+                                    type="submit"
+                                    class="btn btn-link btn-lg px-3"
+                                    data-bs-placement="bottom"
+                                    data-bs-title="Excluir" data-mdb-ripple-init data-ripple-color="primary"
+                                    data-bs-toggle="tooltip">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+
+                            <a data-bs-placement="bottom"
+                               data-bs-title="Incluir lançamento na fatura"
+                               class="btn btn-link btn-lg px-3"
+                               data-bs-toggle="tooltip" data-mdb-ripple-init data-ripple-color="primary"
+                               th:href="@{/lancamentos/adicionarLancamentoNaFatura(id=${lancamento.id},idFaturaCartao=${idFaturaCartao})}"
+                               th:if="${idFaturaCartao != null }">
+                                <i class="bi bi-plus"></i></a>
+
+
+                            <span th:if="${lancamento.estadoDoLancamento}==${T(br.com.ireis.minhasfinancas.modelo.enumeracao.EstadoDoLancamento).ABERTO}">
+                                <a data-bs-placement="bottom"
+                                   data-bs-title="Validar lançamento"
+                                   class="btn btn-link btn-lg px-3"
+                                   data-bs-toggle="tooltip" data-mdb-ripple-init data-ripple-color="primary"
+                                   th:href="@{/lancamentos/atualizarEstadoDoLancamento(id=${lancamento.id},estado=${'VALIDADO'})}">
+                                    <i class="bi bi-check-lg"></i></a>
+                            </span>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot></tfoot>
+            </table>
+
+        </div>
+
+    </div>
+</div>
 </body>
 </html>

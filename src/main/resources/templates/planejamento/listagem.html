@@ -2,13 +2,13 @@
 <html lang="pt-br"
       xmlns:th="http://thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{template.html}">
+      layout:decorate="~{/template.html}">
 <head>
     <title>Minhas Finanças</title>
 </head>
 <body>
 <div layout:fragment="listagem">
-    <div><p><a th:href="@{/lancamentos/formulario}" class="btn btn-outline-primary btn-circle" role="button">
+    <div><p><a th:href="@{/planejamento/formulario}" class="btn btn-outline-primary btn-circle" role="button">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
     </svg>
@@ -19,60 +19,37 @@
             <table class="table caption-top table-striped table-hover table-bordered">
                 <thead class="table-dark">
                 <tr>
-                    <th scope="col">DATA</th>
-                    <th scope="col">DESCRIÇÃO</th>
-                    <th scope="col">TIPO LANÇAMENTO</th>
-                    <th scope="col">VALOR</th>
-                    <th scope="col">NÚMERO DE PARCELAS</th>
-                    <th scope="col">FORMA DE PAGAMENTO</th>
-                    <th scope="col">BANCO</th>
-                    <th scope="col">CARTÃO DE CRÉDITO</th>
-                    <th scope="col">GRUPO LANÇAMENTO</th>
+                    <th scope="col">MÊS</th>
+                    <th scope="col">ANO</th>
                     <th scope="col">AÇÕES</th>
                 </tr>
                 </thead>
                 <tbody class="table-group-divider">
-                <tr th:each="lancamento : ${listaLancamentos}">
-                    <td th:text="${#temporals.format(lancamento.dataDoLancamento, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${lancamento.descricaoLancamento}"></td>
-                    <td th:text="${lancamento.tipoDeLancamento}"></td>
-                    <td th:text="${lancamento.valorLancamento}"></td>
+                <tr th:each="planejamento : ${listaPlanejamentos}">
+                    <td th:text="${planejamento.mes}"></td>
+                    <td th:text="${planejamento.ano}"></td>
                     <td>
-                        <span th:text="${lancamento.numeroDeParcelas}" th:if="${lancamento.numeroDeParcelas == 1}"></span>
-                        <a th:href="@{/parcelas(id=${lancamento.id})}"
-                            class="btn btn-outline-primary" role="button"
-                            th:text="${lancamento.numeroDeParcelas}" th:if="${lancamento.numeroDeParcelas > 1}"></a>
-                    </td>
-                    <td th:text="${lancamento?.formaDePagamento}"></td>
-                    <td th:text="${lancamento?.cartaoDeCredito?.banco?.nome}"></td>
-                    <td th:text="${lancamento.cartaoDeCredito?.bandeira}"></td>
-                    <td th:text="${lancamento.grupoLancamento?.nomeGrupo}"></td>
-                    <td>
-                        <form action="/lancamentos" method="post">
-                            <a th:href="@{/lancamentos/formulario?id={id}(id=${lancamento.id})}"
+                        <form action="/planejamento" method="post">
+                            <a th:href="@{/planejamento/formulario(id=${planejamento.id})}"
                                class="btn btn-outline-primary" role="button">
                                 <i class="bi bi-pencil"></i></a>
 
                             <input type="hidden" name="_method" value="delete">
-                            <input type="hidden" name="id" th:value="${lancamento.id}">
+                            <input type="hidden" name="id" th:value="${planejamento.id}">
 
                             <button type="submit" class="btn btn-outline-danger">
                                 <i class="bi bi-trash"></i>
                             </button>
-                            <a th:href="@{/lancamentos/adicionarLancamentoNaFatura(id=${lancamento.id},idFaturaCartao=${idFaturaCartao})}"  class="btn btn-outline-primary" role="button"
-                               data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                    data-bs-title="Incluir lançamento na fatura." th:if="${idFaturaCartao != null }">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                            <a th:href="@{/planejamento/acompanhamentoMensal(id=${planejamento.id})}"
+                               class="btn btn-outline-primary" role="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
+                                    <path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z"/>
+                                    <path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083c.058-.344.145-.678.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1H1z"/>
+                                    <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 5.982 5.982 0 0 1 3.13-1.567z"/>
                                 </svg>
                             </a>
-                            <a th:href="@{/lancamentos/removerLancamentoDaFatura(id=${lancamento.id},idFaturaCartao=${idFaturaCartao})}"  class="btn btn-outline-primary" role="button"
-                               data-bs-toggle="tooltip" data-bs-placement="bottom"
-                               data-bs-title="Remover lançamento da fatura." th:if="${lancamento.faturaCartao != null }" >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-circle-fill" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
-                                </svg>
-                            </a>
+
 
                         </form>
                     </td>

@@ -4,215 +4,73 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/template.html}">
 <head>
-    <title>lançamentos</title>
+    <title>Investimentos</title>
 </head>
 <body>
 <div layout:fragment="listagem">
-    <span th:if="${#strings.contains(#execInfo.processedTemplateName,'lancamentos')}">
-        <div layout:replace="~{/lancamentos/atalhos :: atalhos}"></div>
-         <form method="post" th:object="${lancamento}" th:action="@{/lancamentos}">
-            <fieldset class="form-floating border p-4">
-                <legend class="w-auto px-1">Filtros</legend>
-                 <div class="row">
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <input type="text"
-                               class="form-control"
-                               th:field="*{dataDoLancamento}">
-                        <label th:for="dataDoLancamento">Data Do Lançamento</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <select class="form-control"
-                                th:field="*{tipoDeLancamento}">
-                            <option th:each="tipo : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).values()}"
-                                    th:value="${tipo}" th:selected="${lancamento.tipoDeLancamento} == ${tipo}"
-                                    th:text="${tipo}"></option>
-                        </select>
-                        <label th:for="tipoDeLancamento">Tipo De Lançamento</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <select class="form-control"
-                                th:field="*{banco}">
-                            <option th:each="banco : ${listaBancos}"
-                                    th:value="${banco.id}"
-                                    th:text="${banco.nome}"
-                                    th:selected="${lancamento.banco?.id == banco.id}"></option>
-                        </select>
-                        <label th:for="banco">Banco</label>
-                    </div>
-                </div>
-                     <div class="col">
-                    <div class="form-floating mb-3">
-                        <select class="form-control"
-                                th:field="*{cartaoDeCredito}">
-                            <option th:each="cartaoDeCredito : ${listaCartoesDeCredito}"
-                                    th:value="${cartaoDeCredito.id}"
-                                    th:text="${cartaoDeCredito.numero}"
-                                    th:selected="${lancamento.cartaoDeCredito?.id == cartaoDeCredito.id}"></option>
-                        </select>
-                        <label th:for="cartaoDeCredito">Cartão de Crédito</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <select class="form-control"
-                                th:field="*{estadoDoLancamento}">
-                            <option th:each="estado : ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.EstadoDoLancamento).values()}"
-                                    th:value="${estado}"
-                                    th:text="${estado}"
-                                    th:selected="${lancamento.estadoDoLancamento} == ${estado}"></option>
-                        </select>
-                        <label th:for="estadoDoLancamento">Estado Do Lançamento</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row ">
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <input type="text"
-                               class="form-control"
-                               th:field="*{descricaoLancamento}"
-                               placeholder="Descricao Lancamento">
-                        <label th:for="descricaoLancamento">Descrição</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <input type="text"
-                               class="form-control"
-                               th:field="*{valorLancamento}"
-                               placeholder="Valor Lancamento">
-                        <label th:for="valorLancamento">Valor</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-floating mb-3">
-                        <select class="form-control"
-                                th:field="*{grupoLancamento}">
-                            <option th:each="grupo : ${listaGruposLancamentos}"
-                                    th:value="${grupo.id}"
-                                    th:text="${grupo.nomeGrupo}"
-                                    th:selected="${lancamento.grupoLancamento?.id == grupo.id}"></option>
-                        </select>
-                        <label th:for="grupoLancamento">Grupo de Lançamento</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <button class="btn btn-outline-primary" type="submit"
-                            data-bs-toggle="tooltip" data-bs-placement="bottom"
-                            data-bs-title="Buscar">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                             class="bi bi-binoculars-fill" viewBox="0 0 16 16">
-                        <path d="M4.5 1A1.5 1.5 0 0 0 3 2.5V3h4v-.5A1.5 1.5 0 0 0 5.5 1h-1zM7 4v1h2V4h4v.882a.5.5 0 0 0 .276.447l.895.447A1.5 1.5 0 0 1 15 7.118V13H9v-1.5a.5.5 0 0 1 .146-.354l.854-.853V9.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v.793l.854.853A.5.5 0 0 1 7 11.5V13H1V7.118a1.5 1.5 0 0 1 .83-1.342l.894-.447A.5.5 0 0 0 3 4.882V4h4zM1 14v.5A1.5 1.5 0 0 0 2.5 16h3A1.5 1.5 0 0 0 7 14.5V14H1zm8 0v.5a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5V14H9zm4-11H9v-.5A1.5 1.5 0 0 1 10.5 1h1A1.5 1.5 0 0 1 13 2.5V3z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            <input type="hidden" name="_method" value="put" th:if="${lancamento.id != null}">
-            <input type="hidden" name="id" th:value="${lancamento?.id}">
-            </fieldset>
-         </form>
-   </span>
+    <div layout:replace="~{/investimentos/atalhos :: atalhos}"></div>
+    <div class="col-lg-12 mx-auto bg-white  rounded">
+        <div class="table-responsive ms-3 me-3 mb-3" style="position: relative; height: 650px">
+            <table class="table table-striped  fs-6">
+                <thead style="top: 0;  position: sticky;" class="table-light">
+                <tr>
+                    <th scope="col">BANCO</th>
+                    <th scope="col">TIPO</th>
+                    <th scope="col">TÍTULO</th>
+                    <th scope="col">ÍNDICE</th>
+                    <th scope="col">VALOR APLICADO</th>
+                    <th scope="col">VENCIMENTO</th>
+                    <th scope="col">RISCO</th>
+                    <th scope="col" class="col-2">AÇÕES</th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider table-divider-color">
+                <tr th:each="investimento : ${listaInvestimentos}">
+                    <td th:text="${investimento.banco.nome}"></td>
+                    <td th:text="${investimento.tipoInvestimento}"></td>
+                    <td th:text="${investimento.titulo}"></td>
+                    <td th:text="${investimento.indice}"></td>
+                    <td>
+                        <a th:href="@{/lancamentos/listaLancamentosInvestimento(idInvestimento=${investimento.id})}">
+                            <span th:text="${#numbers.formatCurrency(investimento.valorAplicado)}"></span>
+                        </a>
+                    </td>
+                    <td th:text="${#temporals.format(investimento.vencimento, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${investimento.risco}"></td>
+                    <td>
+                        <form action="/investimentos" method="post">
+                            <input type="hidden" name="_method" value="delete">
+                            <input type="hidden" name="id" th:value="${investimento.id}">
 
+                            <a data-bs-placement="bottom"
+                               data-bs-title="Editar"
+                               class="btn btn-link btn-lg px-3"
+                               data-bs-toggle="tooltip" data-mdb-ripple-init data-ripple-color="primary"
+                               th:href="@{/investimentos/formulario?id={id}(id=${investimento.id})}">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a data-bs-placement="bottom"
+                               data-bs-title="Investir"
+                               class="btn btn-link btn-lg px-3"
+                               data-bs-toggle="tooltip" data-mdb-ripple-init data-ripple-color="primary"
+                               th:href="@{/lancamentos/formInvestimento(idInvestimento=${investimento.id})}">
+                                <i class="bi bi-bag-check-fill"></i>
+                            </a>
 
-    <div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 100%; max-height: 550px;">
-
-        <table class="table caption-top table-striped table-hover table-sm">
-            <caption>
-                <h5>Lista de lançamentos</h5>
-            </caption>
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">DATA</th>
-                <th scope="col">DESCRIÇÃO</th>
-                <th scope="col">VALOR</th>
-                <th scope="col">BANCO</th>
-                <th scope="col">GRUPO LANÇAMENTO</th>
-                <th scope="col">AÇÕES</th>
-            </tr>
-            </thead>
-            <tbody class="table-group-divider">
-            <tr th:each="lancamento : ${listaLancamentos}" class="text-success">
-
-                <td th:if="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}"
-                    class="text-success"
-                    data-bs-toggle="tooltip" data-bs-placement="bottom"
-                    data-bs-title="Receita"><i class="bi bi-emoji-grin"></i>
-                </td>
-                <td th:if="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).DESPESA}"
-                    class="text-danger"
-                    data-bs-toggle="tooltip" data-bs-placement="bottom"
-                    data-bs-title="Despesa">
-                    <i class="bi bi-emoji-frown"></i>
-                </td>
-                <td th:if="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).ESTORNO_CARTAO}"
-                    class="text-danger"
-                    data-bs-toggle="tooltip" data-bs-placement="bottom"
-                    data-bs-title="Despesa">
-                    <i class="bi bi-emoji-frown"></i>
-                </td>
-
-                <td th:text="${#temporals.format(lancamento.dataDoLancamento, 'dd/MM/yyyy')}"
-                    th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"></td>
-                <td th:text="${lancamento.descricaoLancamento}"
-                    th:class="${lancamento.estadoDoLancamento}==${T(br.com.ireis.minhasfinancas.modelo.enumeracao.EstadoDoLancamento).VALIDADO}?'text-success' : 'text-danger'">
-                </td>
-                <td th:if="${lancamento.numeroDeParcelas > 1}"
-                    th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'">
-                    <p th:text="${#numbers.formatDecimal(lancamento.valorParcelaLancamento,1,2)}"></p></td>
-                <td th:if="${lancamento.numeroDeParcelas == 1}"
-                    th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'">
-                    <p th:text="${#numbers.formatDecimal(lancamento.valorLancamento,1,2)}"></p></td>
-
-                <td th:text="${lancamento?.banco?.nome}"
-                    th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"></td>
-                <td th:text="${lancamento.grupoLancamento?.nomeGrupo}"
-                    th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"></td>
-                <td>
-                    <form action="/lancamentos" method="post">
-                        <input type="hidden" name="_method" value="delete">
-                        <input type="hidden" name="id" th:value="${lancamento.id}">
-
-                        <a th:href="@{/lancamentos/formulario?id={id}(id=${lancamento.id})}"
-                           th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"
-                           data-bs-toggle="tooltip"
-                           data-bs-placement="bottom" data-bs-title="Editar"><i class="bi bi-pencil"></i></a>
-
-                        <button type="submit"
-                                th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'btn text-success' : 'btn text-danger'"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="bottom" data-bs-title="Excluir"><i class="bi bi-trash"></i>
-                        </button>
-
-                        <a th:href="@{/lancamentos/adicionarLancamentoNaFatura(id=${lancamento.id},idFaturaCartao=${idFaturaCartao})}"
-                           th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"
-                           data-bs-toggle="tooltip" data-bs-placement="bottom"
-                           data-bs-title="Incluir lançamento na fatura" th:if="${idFaturaCartao != null }">
-                            <i class="bi bi-check-circle-fill"></i></a>
-
-                        <a th:href="@{/lancamentos/removerLancamentoDaFatura(id=${lancamento.id},idFaturaCartao=${idFaturaCartao})}"
-                           th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"
-                           data-bs-toggle="tooltip" data-bs-placement="bottom"
-                           data-bs-title="Remover lançamento da fatura" th:if="${lancamento.faturaCartao != null }">
-                            <i class="bi bi-dash-circle-fill"></i></a>
-
-                        <span th:if="${lancamento.estadoDoLancamento}==${T(br.com.ireis.minhasfinancas.modelo.enumeracao.EstadoDoLancamento).ABERTO}">
-                                <a th:href="@{/lancamentos/atualizarEstadoDoLancamento(id=${lancamento.id},estado=${'VALIDADO'})}"
-                                   th:class="${lancamento.tipoDeLancamento} == ${T(br.com.ireis.minhasfinancas.modelo.enumeracao.TipoDeLancamento).RECEITA}? 'text-success' : 'text-danger'"
-                                   data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                   data-bs-title="Validar lançamento"><i class="bi bi-clipboard-check"></i></a>
-                            </span>
-                    </form>
-                </td>
-
-            </tr>
-            </tbody>
-        </table>
+                            <button
+                                    type="submit"
+                                    class="btn btn-link btn-lg px-3"
+                                    data-bs-placement="bottom"
+                                    data-bs-title="Excluir" data-mdb-ripple-init data-ripple-color="primary"
+                                    data-bs-toggle="tooltip">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 </body>
